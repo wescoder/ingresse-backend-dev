@@ -13,6 +13,7 @@ module.exports = {
       watch: [
         './db',
         './server',
+        './resources',
         './*.js'
       ]
     }
