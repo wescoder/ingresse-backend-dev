@@ -1,0 +1,64 @@
+{
+  "name": "ingresse",
+  "version": "0.0.1",
+  "description": "Backend dev test for Ingresse",
+  "main": "index.js",
+  "repository": "https://github.com/wescoder/ingresse-backend-dev.git",
+  "author": "Wésley Queiroz <wesley.coder@gmail.com> (https://github.com/wescoder)",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "dev": "run-s -nc api:dev opn",
+    "api:dev": "pm2 start ecosystem.config.js --only ingresse-backend-dev",
+    "opn": "opn https://localhost:3003 -- 'google-chrome' --user-data-dir=.tmp-chrome --remote-debugging-port=9222",
+    "testing": "ava --watch --verbose",
+    "test": "ava --verbose"
+  },
+  "engines": {
+    "node": "^9.2.0"
+  },
+  "ava": {
+    "require": [
+      "@babel/register",
+      "@babel/polyfill"
+    ],
+    "files": [
+      "**/__tests__/**/*.js",
+      "**/*.test.js",
+      "!front/**/*"
+    ]
+  },
+  "now": {
+    "alias": "ingresse-backend-dev.now.sh",
+    "dotenv": ".env.production",
+    "public": true
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/polyfill": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/preset-stage-0": "^7.0.0-beta.44",
+    "@babel/register": "^7.0.0-beta.44",
+    "@types/node": "^9.6.6",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-ava": "^4.5.1",
+    "eslint-plugin-standard": "^3.0.1",
+    "npm-run-all": "^4.1.2",
+    "opn-cli": "^3.1.0",
+    "pm2": "^2.10.2"
+  },
+  "dependencies": {
+    "@koa/cors": "^2.2.1",
+    "ava": "^0.25.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^5.0.1",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-mount": "^3.0.0",
+    "mongorito": "^3.0.4",
+    "mongorito-timestamps": "^1.0.1",
+    "openssl-self-signed-certificate": "^1.1.6"
+  }
+}
