@@ -25,8 +25,7 @@
     ],
     "files": [
       "**/__tests__/**/*.js",
-      "**/*.test.js",
-      "!front/**/*"
+      "**/*.test.js"
     ]
   },
   "now": {

@@ -4,6 +4,8 @@ import { genSaltSync, hashSync } from 'bcryptjs'
 const salt = genSaltSync()
 const { SAVE, REFRESHED } = ActionTypes
 
+export const crypt = x => hashSync(x, salt)
+
 export const cryptFields = (...fieldsToCrypt) => () => ({ dispatch, getState }) => next => action => {
   const { type, fields } = action
   if (type === SAVE) {
@@ -11,7 +13,7 @@ export const cryptFields = (...fieldsToCrypt) => () => ({ dispatch, getState }) 
       Object.keys(fields)
         .map((k) => {
           if (fieldsToCrypt.includes(k)) {
-            fields[k] = hashSync(fields[k], salt)
+            fields[k] = crypt(fields[k])
           }
         })
       dispatch({ type: REFRESHED, fields })
