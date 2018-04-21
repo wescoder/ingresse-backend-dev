@@ -1,7 +1,6 @@
 import test from 'ava'
 
 import connect, { User } from '../../db'
-import { crypt } from '../../db/plugins/cryptFields'
 import { list, find } from './'
 
 test.before('Connect DB', async t => {
@@ -32,15 +31,19 @@ test.afterEach.always('Empty DB', async t => {
 
 test('list has 2 items', async t => {
   const ctx = { body: '' }
-  const userList = await list(ctx, () => {})
+  await list(ctx, () => {})
   t.is(ctx.body.length, 2)
 })
 
 test('find matt and check data', async t => {
   const { id } = t.context.mattAfter
   const ctx = { body: '', params: { id } }
-  const user = await find(ctx, () => {})
+  await find(ctx, () => {})
   t.deepEqual(ctx.body, t.context.mattAfter)
 })
 
-test.todo('create alice')
+test.todo('create method')
+
+test.todo('delete method')
+
+test.todo('update method')

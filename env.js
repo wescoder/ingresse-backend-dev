@@ -1,6 +1,5 @@
 import { config } from 'dotenv'
 import { resolve } from 'path'
-import { readFileSync } from 'fs'
 
 const { NODE_ENV } = process.env
 const envPath = resolve(__dirname, `.env${NODE_ENV !== 'production' ? `.${NODE_ENV}` : ''}`)

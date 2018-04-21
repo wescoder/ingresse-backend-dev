@@ -21,6 +21,7 @@ test.beforeEach('Populate DB', async t => {
     password: '4l3xs73ph4n0v',
     email: 'alex@stepanov.dev'
   }
+  t.context.alexEmail = 'alexander@stepanov.dev'
   t.context.ada = {
     name: 'Ada Lovelace',
     username: 'adalovelace',
@@ -56,7 +57,7 @@ test('add ada and check data', async t => {
 test('find matt and check data', async t => {
   const { username } = t.context.matt
   const matt = await find({ username })
-  const { _id, createdAt, updatedAt, ...mattData } = matt
+  const { _id, createdAt, updatedAt } = matt
   t.deepEqual(matt, {
     ...t.context.matt,
     _id,
@@ -65,3 +66,21 @@ test('find matt and check data', async t => {
     password: crypt(t.context.matt.password)
   })
 })
+
+test('update alex email', async t => {
+  const { username } = t.context.alex
+  const alex = await User.findOne({ username })
+  alex.set('email', t.context.alexEmail)
+  alex.save()
+  const { _id, createdAt, updatedAt, password } = alex.get()
+  t.deepEqual(alex.get(), {
+    ...t.context.alex,
+    email: t.context.alexEmail,
+    _id,
+    createdAt,
+    updatedAt,
+    password
+  })
+})
+
+test.todo('delete alex')

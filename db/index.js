@@ -21,7 +21,7 @@ export const connect = async (dbName = MLAB_DATABASE) => {
       }))
       db.register(model)
     })
-  return await db.connect()
+  return db.connect()
 }
 
 export default connect
