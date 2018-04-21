@@ -12,8 +12,8 @@
     "dev": "run-s -nc api:dev opn",
     "api:dev": "pm2 start ecosystem.config.js --only ingresse-backend-dev",
     "opn": "opn https://localhost:3003 -- 'google-chrome' --user-data-dir=.tmp-chrome --remote-debugging-port=9222",
-    "testing": "ava --watch --verbose",
-    "test": "ava --verbose"
+    "testing": "ava --serial --watch --verbose",
+    "test": "ava --serial --verbose"
   },
   "engines": {
     "node": "^9.2.0"

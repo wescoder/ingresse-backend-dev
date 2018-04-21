@@ -7,7 +7,7 @@ import mount from 'koa-mount'
 import Koa from 'koa'
 import Router from 'koa-router'
 
-import db from './db'
+import connect from './db'
 import { users } from './resources'
 import { IS_PROD, API_PORT, APP_URL } from './env'
 
@@ -28,7 +28,7 @@ app.use(router.allowedMethods())
 
 app.use(mount('/users', users))
 
-db.connect()
+connect()
   .then(() => {
     let server
     if (IS_PROD) {

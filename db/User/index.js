@@ -1,24 +1,32 @@
 import { Model } from 'mongorito'
 
-import { cryptFields, create } from '../plugins'
+import { cryptFields, create as createPlugin } from '../plugins'
 
 export class User extends Model {
 }
 
-User.use(create)
+User.use(createPlugin)
 User.use(cryptFields('password'))
 
-export const players = async () => (await User.find()).map(p => p.get())
+export const list = async () => {
+  const list = await User.find()
+  return list.map(p => p.get())
+}
 
-export const addPlayer = async ({ playerData }) => {
-  const { username, email } = playerData
-  const playerExists = (await User.findOne({ username })) || (await User.findOne({ email }))
+export const find = async ({ username }) => {
+  const user = await User.findOne({ username })
+  return user.get()
+}
 
-  if (playerExists) {
+export const create = async ({ userData }) => {
+  const { username, email } = userData
+  const userExists = (await User.findOne({ username })) || (await User.findOne({ email }))
+
+  if (userExists) {
     throw new Error('User already exists')
   }
 
-  return User.create(playerData)
+  return User.create(userData)
 }
 
 export default User
