@@ -2,7 +2,7 @@ import test from 'ava'
 
 import connect from '../'
 import { crypt } from '../plugins/cryptFields'
-import { User, list, find, create } from './'
+import { User, list, find, create, remove } from './'
 
 test.before('Connect DB', async t => {
   await connect()
@@ -30,7 +30,8 @@ test.beforeEach('Populate DB', async t => {
   }
   await User.create(t.context.matt)
   await User.create(t.context.alex)
-  t.context.mattAfter = (await User.findOne({ username: t.context.matt.username })).get()
+  const matt = await User.findOne({ username: t.context.matt.username })
+  t.context.mattAfter = await matt.json()
 })
 
 test.afterEach.always('Empty DB', async t => {
@@ -83,4 +84,8 @@ test('update alex email', async t => {
   })
 })
 
-test.todo('delete alex')
+test('delete alex', async t => {
+  await remove({ username: t.context.alex.username })
+  const count = await User.count()
+  t.is(count, 1)
+})

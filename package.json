@@ -12,7 +12,7 @@
     "dev": "run-s -nc api:dev opn",
     "api:dev": "pm2 start ecosystem.config.js --only ingresse-backend-dev",
     "opn": "opn https://localhost:3003 -- 'google-chrome' --user-data-dir=.tmp-chrome --remote-debugging-port=9222",
-    "testing": "ava --serial --watch --verbose",
+    "integration": "ava **/*.spec.js --serial --verbose",
     "test": "ava --serial --verbose"
   },
   "engines": {
@@ -47,6 +47,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
+    "got": "^8.3.0",
     "npm-run-all": "^4.1.2",
     "opn-cli": "^3.1.0",
     "pm2": "^2.10.2"

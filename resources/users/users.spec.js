@@ -1,10 +1,12 @@
 import test from 'ava'
+import got from 'got'
 
-import connect, { User } from '../../db'
-import { list, find } from './'
+import { serve } from '../../server'
+import { User } from '../../db'
+import { APP_URL } from '../../env'
 
-test.before('Connect DB', async t => {
-  await connect()
+test.before('Start server', async t => {
+  await serve()
 })
 
 test.beforeEach('Populate DB', async t => {
@@ -24,6 +26,7 @@ test.beforeEach('Populate DB', async t => {
   await User.create(t.context.alex)
   const matt = await User.findOne({ username: t.context.matt.username })
   t.context.mattAfter = await matt.json()
+  t.context.gotOptions = { rejectUnauthorized: false }
 })
 
 test.afterEach.always('Empty DB', async t => {
@@ -31,15 +34,16 @@ test.afterEach.always('Empty DB', async t => {
 })
 
 test('list has 2 items', async t => {
-  const ctx = { body: '' }
-  await list(ctx, () => {})
-  t.is(ctx.body.length, 2)
+  const res = await got.get(`${APP_URL}/users`, t.context.gotOptions)
+  const users = await JSON.parse(res.body)
+  t.true(Array.isArray(users))
+  t.is(users.length, 2)
 })
 
-test('find matt and check data', async t => {
-  const ctx = { body: '', params: { id: t.context.mattAfter._id } }
-  await find(ctx, () => {})
-  t.deepEqual(ctx.body, t.context.mattAfter)
+test('find method', async t => {
+  const res = await got.get(`${APP_URL}/users/${t.context.mattAfter._id}`, t.context.gotOptions)
+  const matt = JSON.parse(res.body)
+  t.deepEqual(matt, t.context.mattAfter)
 })
 
 test.todo('create method')

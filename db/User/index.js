@@ -1,21 +1,22 @@
 import { Model } from 'mongorito'
 
-import { cryptFields, create as createPlugin } from '../plugins'
+import { cryptFields, json, create as createPlugin } from '../plugins'
 
 export class User extends Model {
 }
 
+User.use(json)
 User.use(createPlugin)
 User.use(cryptFields('password'))
 
 export const list = async () => {
   const list = await User.find()
-  return list.map(p => p.get())
+  return list.map(async p => p.json())
 }
 
 export const find = async ({ username }) => {
   const user = await User.findOne({ username })
-  return user.get()
+  return user.json()
 }
 
 export const create = async ({ userData }) => {
@@ -27,6 +28,10 @@ export const create = async ({ userData }) => {
   }
 
   return User.create(userData)
+}
+
+export const remove = async ({ username }) => {
+  return User.remove({ username })
 }
 
 export default User
