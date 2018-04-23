@@ -22,10 +22,10 @@ test.beforeEach('Populate DB', async t => {
     password: '4l3xs73ph4n0v',
     email: 'alex@stepanov.dev'
   }
-  await User.create(t.context.matt)
-  await User.create(t.context.alex)
+  await (new User(t.context.matt)).save()
+  await (new User(t.context.alex)).save()
   const matt = await User.findOne({ username: t.context.matt.username })
-  t.context.mattAfter = await matt.json()
+  t.context.mattAfter = matt && await matt.json()
   t.context.gotOptions = { rejectUnauthorized: false }
 })
 

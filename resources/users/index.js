@@ -10,15 +10,22 @@ const router = new Router()
 
 export const list = async (ctx, next) => {
   const users = await User.find()
-  ctx.body = users.map(u => u ? u.json() : null)
+  ctx.body = users.map(u => u && u.json())
   await next()
 }
 
 export const find = async (ctx, next) => {
   const { params: { id } } = ctx
   const user = await User.findOne({ _id: new ObjectID(id) })
-  ctx.body = user ? await user.json() : null
+  ctx.body = user && await user.json()
   await next()
+}
+
+export const create = async (ctx, next) => {
+  const { params: { userData } } = ctx
+  const user = new User(userData)
+  await user.save()
+  ctx.body = user && await user.json()
 }
 
 router.get('/', list)

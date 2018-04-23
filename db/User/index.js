@@ -1,22 +1,21 @@
 import { Model } from 'mongorito'
 
-import { cryptFields, json, create as createPlugin } from '../plugins'
+import { cryptFields, json } from '../plugins'
 
 export class User extends Model {
 }
 
 User.use(json)
-User.use(createPlugin)
 User.use(cryptFields('password'))
 
 export const list = async () => {
   const list = await User.find()
-  return list.map(async p => p.json())
+  return list.map(async p => p && p.json())
 }
 
 export const find = async ({ username }) => {
   const user = await User.findOne({ username })
-  return user.json()
+  return user && user.json()
 }
 
 export const create = async ({ userData }) => {
@@ -27,7 +26,9 @@ export const create = async ({ userData }) => {
     throw new Error('User already exists')
   }
 
-  return User.create(userData)
+  const user = new User(userData)
+  await user.save()
+  return user && user.json()
 }
 
 export const remove = async ({ username }) => {
