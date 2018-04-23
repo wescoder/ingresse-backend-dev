@@ -11,9 +11,9 @@ module.exports = {
         '--inspect'
       ],
       watch: [
-        './db',
-        './server',
-        './resources',
+        './db/**/*',
+        './server/**/*',
+        './resources/**/*',
         './*.js'
       ]
     }

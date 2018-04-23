@@ -1,25 +1,27 @@
 import { Database } from 'mongorito'
 import timestamps from 'mongorito-timestamps'
 
-// import User from './User'
+import User from './User'
 
 import { MLAB_USER, MLAB_PASSWORD, MLAB_ENDPOINT, MLAB_DATABASE } from '../env'
 
-// export * from './User'
+export * from './User'
 
 export const models = {
-  // User
+  User
 }
 
-export const db = new Database(`mongodb://${MLAB_USER}:${MLAB_PASSWORD}@${MLAB_ENDPOINT}/${MLAB_DATABASE}`)
+export const connect = async (dbName = MLAB_DATABASE) => {
+  const db = new Database(`mongodb://${MLAB_USER}:${MLAB_PASSWORD}@${MLAB_ENDPOINT}/${dbName}`)
+  Object.values(models)
+    .forEach((model) => {
+      model.use(timestamps({
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
+      }))
+      db.register(model)
+    })
+  return db.connect()
+}
 
-Object.values(models)
-  .forEach((model) => {
-    model.use(timestamps({
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt'
-    }))
-    db.register(model)
-  })
-
-export default db
+export default connect

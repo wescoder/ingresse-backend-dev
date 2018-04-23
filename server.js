@@ -7,7 +7,7 @@ import mount from 'koa-mount'
 import Koa from 'koa'
 import Router from 'koa-router'
 
-import db from './db'
+import connect from './db'
 import { users } from './resources'
 import { IS_PROD, API_PORT, APP_URL } from './env'
 
@@ -28,18 +28,17 @@ app.use(router.allowedMethods())
 
 app.use(mount('/users', users))
 
-db.connect()
-  .then(() => {
-    let server
-    if (IS_PROD) {
-      server = http.createServer(app.callback())
-    } else {
-      server = https.createServer(cert, app.callback())
-    }
-    server.listen(API_PORT, () =>
-      console.log(`API running on port ${API_PORT} ${APP_URL}`)
-    )
-  })
-  .catch(err => console.error('DB connection Failed!', err))
+export const serve = async () => {
+  await connect()
+  let server
+  if (IS_PROD) {
+    server = http.createServer(app.callback())
+  } else {
+    server = https.createServer(cert, app.callback())
+  }
+  server.listen(API_PORT, () =>
+    console.log(`API running on port ${API_PORT} ${APP_URL}`)
+  )
+}
 
-export default app
+export default serve
