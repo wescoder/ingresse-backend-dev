@@ -10,7 +10,7 @@ User.use(cryptFields('password'))
 
 export const list = async () => {
   const list = await User.find()
-  return list.map(async p => p && p.json())
+  return Promise.all(list.map(async p => p.json()))
 }
 
 export const find = async ({ username }) => {
@@ -28,7 +28,7 @@ export const create = async ({ userData }) => {
 
   const user = new User(userData)
   await user.save()
-  return user && user.json()
+  return user.json()
 }
 
 export const remove = async ({ username }) => {

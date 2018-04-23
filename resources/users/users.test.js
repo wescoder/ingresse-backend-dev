@@ -1,7 +1,7 @@
 import test from 'ava'
 
 import connect, { User } from '../../db'
-import { list, find, create } from './'
+import { list, find, create, remove, update } from './'
 
 test.before('Connect DB', async t => {
   await connect()
@@ -50,14 +50,35 @@ test('find matt and check data', async t => {
 })
 
 test('create method', async t => {
-  const ctx = { body: '', params: { userData: t.context.ada } }
+  const ctx = { body: '', request: { body: t.context.ada } }
   await create(ctx, () => {})
   const ada = await User.findOne({ username: t.context.ada.username })
-
   t.truthy(ada)
   t.deepEqual(ctx.body, await ada.json())
 })
 
-test.todo('delete method')
+test('delete method', async t => {
+  const ctx = { body: '', params: { id: t.context.mattAfter._id } }
+  await remove(ctx, () => {})
+  t.is(ctx.body.ok, 1)
+})
 
-test.todo('update method')
+test('update method', async t => {
+  const alex = await User.findOne({ username: t.context.alex.username })
+  const newAlex = {
+    ...(await alex.json()),
+    email: t.context.alexEmail
+  }
+  const ctx = {
+    body: '',
+    request: {
+      body: newAlex
+    },
+    params: { id: alex.get('_id') }
+  }
+  await update(ctx, () => {})
+  t.deepEqual(ctx.body, {
+    ...newAlex,
+    updatedAt: ctx.body.updatedAt
+  })
+})
