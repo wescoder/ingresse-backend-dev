@@ -1,6 +1,6 @@
 {
   "name": "ingresse",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Backend dev test for Ingresse",
   "main": "index.js",
   "repository": "https://github.com/wescoder/ingresse-backend-dev.git",
