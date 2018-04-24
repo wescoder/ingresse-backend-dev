@@ -1,6 +1,6 @@
 {
   "name": "ingresse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Backend dev test for Ingresse",
   "main": "index.js",
   "repository": "https://github.com/wescoder/ingresse-backend-dev.git",
@@ -12,8 +12,10 @@
     "dev": "run-s -nc api:dev opn",
     "api:dev": "pm2 start ecosystem.config.js --only ingresse-backend-dev",
     "opn": "opn https://localhost:3003 -- 'google-chrome' --user-data-dir=.tmp-chrome --remote-debugging-port=9222",
-    "integration": "MLAB_DATABASE=ingresse-test2 ava **/*.spec.js --serial --verbose",
-    "test": "ava --serial --verbose"
+    "lint": "eslint .",
+    "test": "ava --serial --verbose",
+    "integration": "NODE_ENV=integration ava **/*.spec.js --serial --verbose",
+    "coverage": "nyc ava --serial"
   },
   "engines": {
     "node": "^9.2.0"
@@ -28,17 +30,38 @@
       "**/*.test.js"
     ]
   },
+  "nyc": {
+    "check-coverage": false,
+    "per-file": false,
+    "lines": 95,
+    "statements": 95,
+    "functions": 95,
+    "branches": 95,
+    "cache": false,
+    "all": true,
+    "sourceMap": false,
+    "require": [
+      "@babel/register"
+    ],
+    "exclude": [
+      "coverage/**/*",
+      "**/*.{test,spec}.js",
+      "ecosystem.config.js",
+      "index.js",
+      "env.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  },
   "now": {
+    "type": "npm",
     "alias": "ingresse-backend-dev.now.sh",
-    "dotenv": ".env.production",
+    "dotenv": ".env",
     "public": true
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.44",
-    "@babel/polyfill": "^7.0.0-beta.44",
-    "@babel/preset-env": "^7.0.0-beta.44",
-    "@babel/preset-stage-0": "^7.0.0-beta.44",
-    "@babel/register": "^7.0.0-beta.44",
     "@types/node": "^9.6.6",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
@@ -49,10 +72,16 @@
     "eslint-plugin-standard": "^3.0.1",
     "got": "^8.3.0",
     "npm-run-all": "^4.1.2",
+    "nyc": "^11.7.1",
     "opn-cli": "^3.1.0",
     "pm2": "^2.10.2"
   },
   "dependencies": {
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/polyfill": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/preset-stage-0": "^7.0.0-beta.44",
+    "@babel/register": "^7.0.0-beta.44",
     "@koa/cors": "^2.2.1",
     "ava": "^0.25.0",
     "bcryptjs": "^2.4.3",

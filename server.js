@@ -9,7 +9,6 @@ import Router from 'koa-router'
 
 import connect from './db'
 import { users } from './resources'
-import { IS_PROD, API_PORT, APP_URL } from './env'
 
 const app = new Koa()
 
@@ -28,17 +27,35 @@ app.use(router.allowedMethods())
 
 app.use(mount('/users', users))
 
-export const serve = async () => {
-  await connect()
+export const serve = async (isProd, port, appUrl) => {
+  const db = await connect()
+
   let server
-  if (IS_PROD) {
-    server = http.createServer(app.callback())
+  if (isProd) {
+    server = await http.createServer(app.callback())
   } else {
-    server = https.createServer(cert, app.callback())
+    server = await https.createServer(cert, app.callback())
   }
-  server.listen(API_PORT, () =>
-    console.log(`API running on port ${API_PORT} ${APP_URL}`)
+  await server.listen(port, () =>
+    console.log(`API running on port ${port} ${appUrl}`)
   )
+
+  const close = async () => {
+    await server.close()
+    await db.disconnect()
+
+    console.log('Server stopped sucessfully')
+    process.exit(0)
+  }
+
+  process.on('exit', () => console.log('Bye!'))
+  process.on('SIGINT', close)
+  process.on('SIGTERM', close)
+  process.on('SIGUSR1', close)
+  process.on('SIGUSR2', close)
+  process.on('uncaughtException', close)
+
+  return server
 }
 
 export default serve

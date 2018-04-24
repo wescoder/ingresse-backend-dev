@@ -15,8 +15,8 @@ const {
   API_PORT = (IS_PROD ? 80 : 3003)
 } = process.env
 
-const DOMAIN = `${IS_PROD ? 'ingresse-api.now.sh' : 'localhost'}`
-const APP_URL = `https://${DOMAIN}${API_PORT !== 80 ? `:${API_PORT}` : ''}`
+const { DOMAIN = `${IS_PROD ? 'ingresse-backend-dev.now.sh' : 'localhost'}` } = process.env
+const { APP_URL = `https://${DOMAIN}${API_PORT !== 80 ? `:${API_PORT}` : ''}` } = process.env
 
 export {
   API_PORT,
