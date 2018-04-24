@@ -1,0 +1,12 @@
+.nyc_output
+.tmp-chrome
+.vscode
+coverage
+node_modules
+!.env*
+.eslintrc.js
+.gitignore
+.tools-versions
+.ecosystem.config.js
+jsconfig.json
+*.log

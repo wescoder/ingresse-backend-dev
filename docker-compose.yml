@@ -1,0 +1,9 @@
+version: "3"
+services:
+  web:
+    build: .
+    container_name: ingresse
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env

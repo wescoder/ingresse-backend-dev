@@ -28,7 +28,8 @@ app.use(router.allowedMethods())
 app.use(mount('/users', users))
 
 export const serve = async (isProd, port, appUrl) => {
-  await connect()
+  const db = await connect()
+
   let server
   if (isProd) {
     server = await http.createServer(app.callback())
@@ -38,6 +39,22 @@ export const serve = async (isProd, port, appUrl) => {
   await server.listen(port, () =>
     console.log(`API running on port ${port} ${appUrl}`)
   )
+
+  const close = async () => {
+    await server.close()
+    await db.disconnect()
+
+    console.log('Server stopped sucessfully')
+    process.exit(0)
+  }
+
+  process.on('exit', () => console.log('Bye!'))
+  process.on('SIGINT', close)
+  process.on('SIGTERM', close)
+  process.on('SIGUSR1', close)
+  process.on('SIGUSR2', close)
+  process.on('uncaughtException', close)
+
   return server
 }
 

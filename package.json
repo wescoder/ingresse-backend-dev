@@ -13,8 +13,8 @@
     "api:dev": "pm2 start ecosystem.config.js --only ingresse-backend-dev",
     "opn": "opn https://localhost:3003 -- 'google-chrome' --user-data-dir=.tmp-chrome --remote-debugging-port=9222",
     "lint": "eslint .",
-    "integration": "MLAB_DATABASE=ingresse-test2 ava **/*.spec.js --serial --verbose",
     "test": "ava --serial --verbose",
+    "integration": "NODE_ENV=integration ava **/*.spec.js --serial --verbose",
     "coverage": "nyc ava --serial"
   },
   "engines": {
@@ -56,16 +56,12 @@
     ]
   },
   "now": {
+    "type": "npm",
     "alias": "ingresse-backend-dev.now.sh",
-    "dotenv": ".env.production",
+    "dotenv": ".env",
     "public": true
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.44",
-    "@babel/polyfill": "^7.0.0-beta.44",
-    "@babel/preset-env": "^7.0.0-beta.44",
-    "@babel/preset-stage-0": "^7.0.0-beta.44",
-    "@babel/register": "^7.0.0-beta.44",
     "@types/node": "^9.6.6",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
@@ -81,6 +77,11 @@
     "pm2": "^2.10.2"
   },
   "dependencies": {
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/polyfill": "^7.0.0-beta.44",
+    "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/preset-stage-0": "^7.0.0-beta.44",
+    "@babel/register": "^7.0.0-beta.44",
     "@koa/cors": "^2.2.1",
     "ava": "^0.25.0",
     "bcryptjs": "^2.4.3",
