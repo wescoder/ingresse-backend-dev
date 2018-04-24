@@ -3,10 +3,10 @@ import got from 'got'
 
 import { serve } from '../../server'
 import { User } from '../../db'
-import { APP_URL } from '../../env'
+import { IS_PROD, API_PORT, APP_URL } from '../../env'
 
 test.before('Start server', async t => {
-  await serve()
+  await serve(IS_PROD, API_PORT, APP_URL)
 })
 
 test.beforeEach('Populate DB', async t => {
