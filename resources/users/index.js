@@ -2,7 +2,7 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import { ObjectID } from 'mongodb'
 
-import { User } from '../../db'
+import User from '../../db/User'
 
 export const users = new Koa()
 

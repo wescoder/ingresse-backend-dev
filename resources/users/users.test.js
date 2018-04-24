@@ -1,6 +1,7 @@
 import test from 'ava'
 
-import connect, { User } from '../../db'
+import User from '../../db/User'
+import connect from '../../db'
 import { list, find, create, remove, update } from './'
 
 test.before('Connect DB', async t => {
@@ -27,13 +28,18 @@ test.beforeEach('Populate DB', async t => {
     password: '4d4l0v3l4c3',
     email: 'ada@lovelace.math'
   }
-  await (new User(t.context.matt)).save()
-  await (new User(t.context.alex)).save()
-  const matt = await User.findOne({ username: t.context.matt.username })
-  t.context.mattAfter = matt && await matt.json()
+  const matt = new User(t.context.matt)
+  await matt.save()
+  const alex = new User(t.context.alex)
+  await alex.save()
+  t.context.mattAfter = await matt.json()
 })
 
 test.afterEach.always('Empty DB', async t => {
+  await User.remove()
+})
+
+test.after.always(async () => {
   await User.remove()
 })
 

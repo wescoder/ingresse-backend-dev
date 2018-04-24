@@ -5,8 +5,6 @@ import User from './User'
 
 import { MLAB_USER, MLAB_PASSWORD, MLAB_ENDPOINT, MLAB_DATABASE } from '../env'
 
-export * from './User'
-
 export const models = {
   User
 }

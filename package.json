@@ -13,9 +13,9 @@
     "api:dev": "pm2 start ecosystem.config.js --only ingresse-backend-dev",
     "opn": "opn https://localhost:3003 -- 'google-chrome' --user-data-dir=.tmp-chrome --remote-debugging-port=9222",
     "lint": "eslint .",
-    "integration": "MLAB_DATABASE=ingresse-test2 ava **/*.spec.js --serial",
+    "integration": "MLAB_DATABASE=ingresse-test2 ava **/*.spec.js --serial --verbose",
     "test": "ava --serial --verbose",
-    "coverage": "nyc ava --serial --verbose"
+    "coverage": "nyc ava --serial"
   },
   "engines": {
     "node": "^9.2.0"
@@ -31,14 +31,15 @@
     ]
   },
   "nyc": {
-    "check-coverage": true,
-    "per-file": true,
+    "check-coverage": false,
+    "per-file": false,
     "lines": 95,
     "statements": 95,
     "functions": 95,
     "branches": 95,
     "cache": false,
     "all": true,
+    "sourceMap": false,
     "require": [
       "@babel/register"
     ],
@@ -47,8 +48,7 @@
       "**/*.{test,spec}.js",
       "ecosystem.config.js",
       "index.js",
-      "env.js",
-      "resources/index.js"
+      "env.js"
     ],
     "reporter": [
       "lcov",

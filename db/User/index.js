@@ -2,8 +2,7 @@ import { Model } from 'mongorito'
 
 import { cryptFields, json } from '../plugins'
 
-export class User extends Model {
-}
+export class User extends Model {}
 
 User.use(json)
 User.use(cryptFields('password'))
@@ -18,9 +17,11 @@ export const find = async ({ username }) => {
   return user && user.json()
 }
 
-export const create = async ({ userData }) => {
+export const create = async (userData) => {
   const { username, email } = userData
-  const userExists = (await User.findOne({ username })) || (await User.findOne({ email }))
+  const foundUsername = await User.count({ username })
+  const foundEmail = await User.count({ email })
+  const userExists = foundUsername || foundEmail
 
   if (userExists) {
     throw new Error('User already exists')

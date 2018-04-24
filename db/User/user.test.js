@@ -28,10 +28,11 @@ test.beforeEach('Populate DB', async t => {
     password: '4d4l0v3l4c3',
     email: 'ada@lovelace.math'
   }
-  await (new User(t.context.matt)).save()
-  await (new User(t.context.alex)).save()
-  const matt = await User.findOne({ username: t.context.matt.username })
-  t.context.mattAfter = matt && await matt.json()
+  const matt = new User(t.context.matt)
+  await matt.save()
+  const alex = new User(t.context.alex)
+  await alex.save()
+  t.context.mattAfter = await matt.json()
 })
 
 test.afterEach.always('Empty DB', async t => {
@@ -41,18 +42,6 @@ test.afterEach.always('Empty DB', async t => {
 test('list has 2 items', async t => {
   const userList = await list()
   t.is(userList.length, 2)
-})
-
-test('add ada and check data', async t => {
-  const ada = await create({ userData: t.context.ada })
-  const { _id, createdAt, updatedAt } = ada
-  t.deepEqual(ada, {
-    ...t.context.ada,
-    password: crypt(t.context.ada.password),
-    createdAt,
-    updatedAt,
-    _id
-  })
 })
 
 test('find matt and check data', async t => {
@@ -68,13 +57,30 @@ test('find matt and check data', async t => {
   })
 })
 
+test('add ada and check data', async t => {
+  const ada = await create(t.context.ada)
+  const { _id, createdAt, updatedAt } = ada
+  t.deepEqual(ada, {
+    ...t.context.ada,
+    password: crypt(t.context.ada.password),
+    createdAt,
+    updatedAt,
+    _id
+  })
+})
+
+test('throws on existent user', async t => {
+  const { message } = await t.throws(create(t.context.matt))
+  t.is(message, 'User already exists')
+})
+
 test('update alex email', async t => {
   const { username } = t.context.alex
   const alex = await User.findOne({ username })
   alex.set('email', t.context.alexEmail)
   alex.save()
-  const { _id, createdAt, updatedAt, password } = alex.get()
-  t.deepEqual(alex.get(), {
+  const { _id, createdAt, updatedAt, password } = await alex.json()
+  t.deepEqual(await alex.json(), {
     ...t.context.alex,
     email: t.context.alexEmail,
     _id,
@@ -85,7 +91,8 @@ test('update alex email', async t => {
 })
 
 test('delete alex', async t => {
+  const beforeCount = await User.count()
   await remove({ username: t.context.alex.username })
   const count = await User.count()
-  t.is(count, 1)
+  t.is(count, beforeCount - 1)
 })
