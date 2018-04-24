@@ -2,6 +2,13 @@
 
 > Backend dev test for [Ingresse](https://www.ingresse.com/)
 
+## Example
+
+There is a hosted instance of this application available on [https://ingresse-backend-dev.now.sh/users](https://ingresse-backend-dev.now.sh/users) that you can test using any rest client over https.
+There is no authentication needed right now and I'll not maintain it live for long since it is only for testing purposes.
+After a month (max) I'll shutdown this instance, but it will always be possible to publish it again via a now deploy.
+[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/wescoder/ingresse-backend-dev)
+
 ## Installing
 
 ## System dependencies
@@ -53,8 +60,9 @@ The variables are listed below, and we recommend you to have a `.env` file in th
 
 You may have other `.env.<NODE_ENV>` files in the project root where `<NODE_ENV>` is the same as the value for `NODE_ENV` environment variable, like `production`, `test` or `development`. This will tell the project which environment you want to run.
 
-Example `.env.production`:
+Example `.env` (production):
 ```sh
+NODE_ENV='production'
 MLAB_USER='<DB_USER>'
 MLAB_PASSWORD='<DB_PASSWORD>'
 MLAB_ENDPOINT='ingresse.lvh.me'
@@ -62,8 +70,9 @@ MLAB_DATABASE='ingresse-prod'
 API_PORT=3000
 ```
 
-Example `.env.development`:
+Example `.env.development` (local development):
 ```sh
+NODE_ENV='development'
 MLAB_USER='<DB_USER>'
 MLAB_PASSWORD='<DB_PASSWORD>'
 MLAB_ENDPOINT='localhost'
@@ -71,13 +80,24 @@ MLAB_DATABASE='ingresse-dev'
 API_PORT=3001
 ```
 
-Example `.env.test`:
+Example `.env.test` (unit tests):
 ```sh
+NODE_ENV='test'
 MLAB_USER='<DB_USER>'
 MLAB_PASSWORD='<DB_PASSWORD>'
 MLAB_ENDPOINT='localhost'
 MLAB_DATABASE='ingresse-test'
 API_PORT=3002
+```
+
+Example `.env.integration` (integration tests):
+```sh
+NODE_ENV='test'
+MLAB_USER='<DB_USER>'
+MLAB_PASSWORD='<DB_PASSWORD>'
+MLAB_ENDPOINT='localhost'
+MLAB_DATABASE='ingresse-integration'
+API_PORT=3003
 ```
 
 ## SSL error on localhost
@@ -90,13 +110,28 @@ But while on production you should set up your server with your own certificate 
 ## Publishing
 
 ### Via DOCKER
-> WIP <!-- TODO: make DOCKERFILE and write instructions -->
+
+You can deploy this application via docker using either the Dockerfile or the docker-compose.yml provided as you prefer, be it locally or on your docker hosting service of choice.
+
+Example:
+```sh
+# with docker-compose
+$ docker-compose up -d --build
+# or with docker
+$ docker build -t ingresse-backend-dev
+$ docker run -it -p 3000:3000 ingresse-backend-dev
+```
 
 ### Via [NOW](https://zeit.co/now)
 
 To publish via the [NOW](https://zeit.co/now) service you may use this button [![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/wescoder/ingresse-backend-dev).
 
 Or if you prefer you can publish it manually via [`now-cli`](https://zeit.co/docs/features/now-cli)
+
+Example:
+```sh
+$ now
+```
 
 #### Production environment configuration
 
